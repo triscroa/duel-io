@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Duel.io</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main class="app">
+    <section id="lobby" class="screen">
+      <div class="brand">DUEL<span>.IO</span></div>
+      <p class="tagline">Choose your fighter. Read your opponent. Strike when the opening appears.</p>
+
+      <div class="panel">
+        <h1>Enter the arena</h1>
+        <label>Room code
+          <input id="room" value="arena-1" maxlength="24" autocomplete="off">
+        </label>
+
+        <div class="characters">
+          <button class="character" data-character="wirefreak">
+            <strong>WIREFREAK</strong>
+            <small>Balanced. No post-parry or failed-attack buff.</small>
+          </button>
+          <button class="character" data-character="laputan">
+            <strong>LAPUTAN MACHINE</strong>
+            <small>Fastest. Starts first. Can stun after a parried attack.</small>
+          </button>
+          <button class="character" data-character="deadman">
+            <strong>DEADMAN</strong>
+            <small>Slowest. Successful parry grants an extra turn.</small>
+          </button>
+        </div>
+        <p id="joinError" class="error"></p>
+      </div>
+
+      <details class="rules panel">
+        <summary>Rules currently implemented</summary>
+        <ul>
+          <li>Attack choices: High Chop, Thrust, Low Slash.</li>
+          <li>Parry choices: High Parry, Parry, Low Parry.</li>
+          <li>A matching parry blocks the corresponding attack.</li>
+          <li>A failed parry makes the defender take a step back.</li>
+          <li>A successful parry reverses the roles.</li>
+          <li>Same-character starts are decided by coin flip.</li>
+          <li>Laputan Machine is fastest; Deadman is slowest.</li>
+          <li>Deadman gets an extra turn after a successful parry.</li>
+          <li>Against Deadman, a successful parry of Laputan stuns Laputan for one turn.</li>
+        </ul>
+        <p class="note">The supplied rules do not define a final victory condition, so this prototype temporarily ends a duel after 3 step-backs. Change this in <code>server.js</code> when you decide the real condition.</p>
+      </details>
+    </section>
+
+    <section id="game" class="screen hidden">
+      <header class="topbar">
+        <div class="brand small">DUEL<span>.IO</span></div>
+        <div id="roomLabel"></div>
+        <button id="reset" class="ghost">Restart duel</button>
+      </header>
+
+      <div id="banner" class="banner"></div>
+
+      <div class="arena">
+        <article class="fighter" id="you">
+          <div class="portrait"><span>YOU</span></div>
+          <h2 id="youName">—</h2>
+          <div class="role" id="youRole">WAITING</div>
+          <div class="steps" id="youSteps"></div>
+        </article>
+
+        <div class="versus">VS</div>
+
+        <article class="fighter" id="opponent">
+          <div class="portrait enemy"><span>OPP</span></div>
+          <h2 id="oppName">—</h2>
+          <div class="role" id="oppRole">WAITING</div>
+          <div class="steps" id="oppSteps"></div>
+        </article>
+      </div>
+
+      <section class="controls">
+        <div id="attackControls">
+          <h3>Attack</h3>
+          <div class="moves">
+            <button data-attack="high_chop">HIGH CHOP</button>
+            <button data-attack="thrust">THRUST</button>
+            <button data-attack="low_slash">LOW SLASH</button>
+          </div>
+        </div>
+
+        <div id="parryControls" class="hidden">
+          <h3>Parry</h3>
+          <div class="moves">
+            <button data-parry="high_parry">HIGH PARRY</button>
+            <button data-parry="parry">PARRY</button>
+            <button data-parry="low_parry">LOW PARRY</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="combat-log">
+        <h3>Combat log</h3>
+        <div id="log"></div>
+      </section>
+    </section>
+  </main>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/game.js"></script>
+</body>
+</html>
